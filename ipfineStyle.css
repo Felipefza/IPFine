@@ -103,7 +103,7 @@ nav {
 
     text-decoration: none;
 
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     font-weight: 500;
 
     transition: all 0.2s ease;
@@ -285,6 +285,73 @@ nav {
 
     transform: translateY(-1px);
 }
+
+/* Calculator Section */
+.calculator {
+  display: flex;
+  justify-content: center;
+
+  border-top: 1px solid var(--card-border);
+  border-bottom: 1px solid var(--card-border);
+
+  min-height: 100vh;
+  padding: 10rem 4% 4rem;
+}
+
+.calculator-inner {
+  display: flex;
+  flex-direction: column;
+
+  border: 1px solid var(--card-border);
+
+  max-width: var(--container-max);
+  width: 100%;
+
+  padding-top: 3rem;
+  padding-left: 3rem;
+}
+
+.calculator-title {
+  font-size: 1.5rem;
+}
+
+.calculator-subtitle {
+  font-size: 1.3rem;
+}
+
+.input-user {
+  display: flex;
+  width: auto;
+  height: 7rem;
+
+  gap: 3rem;
+}
+
+.input-user label {
+  font-size: 1.1rem;
+}
+
+.input-box {
+  height: 2.5rem;
+
+  color: var(--text-main);
+  background-color: var(--dark-bg);
+
+  font-size: 1.5rem;
+  font-weight: 500;
+
+  padding-left: 1rem;
+}
+
+
+
+
+
+
+
+
+
+
 
 
 

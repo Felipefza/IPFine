@@ -16,11 +16,11 @@
       <div class="nav-inner">
           <div class="logo">
               IPFINE
-              <span>Cálculo de IPv4</span>
+              <span>Cálculo de VLSM</span>
           </div>
 
         <ul class="nav-links">
-          <li><a href="#ivp4">IPv4</a></li>
+          <li><a href="#calculator">VLSM</a></li>
           <li><a href="#descargar_app">Descargar APP TUI</a></li>
         </ul>
 
@@ -33,33 +33,48 @@
       <div class="main-inner">
         <h1 class="main-title">
           <span class="line-1">Calculadora</span>
-          <span class="line-2">IPv4</span>
+          <span class="line-2">VLSM</span>
         </h1>
         <p class="main-subtitle">
           Genera un rango de IP asignable, segun numero de áreas y hosts, devuelve mascaras, rango de IP asignables, IP de red y de broadcast
         </p>
-        <h2 class="main-badge-1">50K</h2>
+        <h2 class="main-badge-1">50K+</h2>
         <p class="main-desc-1">
           IP CALCULADAS
         </p>
-        <a class="main-link" type="button">Comenzar</a>
+        <a class="main-link" href="#calculator">Comenzar</a>
       </div>
     </section>
 
     <!-- Calculator Section -->
-    <div class="calculator">
-      <div class="input-user">
-        <label for="network-address">Dirección de red</label>
-        <input id="network-address" type="text" placeholder="192.168.1.0">
+    <div id="calculator" class="calculator">
+      <div class="calculator-inner">
+        <p class="calculator-title">Calculadora VLSM</p>
+        <p class="calculator-subtitle">Configuración de red</p>
 
-        <label for="number-subnets">Cantidad de Subnets</label>
-        <input id="number-subnets" type="text" placeholder="20">
+        <div class="input-user">
+          <div>
+            <label for="network-address">Dirección de red</label>
+            <br>
+            <input id="network-address" class="input-box" type="text" placeholder="192.168.1.0">
+            <br>
+            <label id="network-address-error" for="network-address"></label>
+          </div>
+
+          <div>
+            <label for="number-subnets">Cantidad de Subnets</label>
+            <br>
+            <input id="number-subnets" class="input-box" type="text" placeholder="20">
+            <br>
+            <label id="number-subnets-error" for="network-address"></label>
+          </div>
+        </div>
+
+        <p class="calculator-subtitle">Requerimientos de Subnet</p>
+
+        <div class="calculator-requirements"></div>
+        <div class="calculator-error"></div>
       </div>
-
-      <p class="calculator-subtitle">Requerimientos de Subnet</p>
-
-      <div class="calculator-requirements"></div>
-      <div class="calculator-error"></div>
     </div>
 
     <!-- Footer -->
