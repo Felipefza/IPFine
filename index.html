@@ -50,13 +50,14 @@
     <div id="calculator" class="calculator">
       <div class="calculator-inner">
         <p class="calculator-title">Calculadora VLSM</p>
+        <p class="calculator-description text-muted">Diseña subnets eficientes para una optima utilizacion del espacio de las direcciones de red .</p>
         <p class="calculator-subtitle">Configuración de red</p>
 
         <div class="input-user">
           <div>
             <label for="network-address">Dirección de red</label>
             <br>
-            <input id="network-address" class="input-box" type="text" placeholder="192.168.1.0">
+            <input id="network-address" class="input-box" type="text" value="192.168.1.0" placeholder="192.168.1.0">
             <br>
             <label id="network-address-error" for="network-address"></label>
           </div>
@@ -64,13 +65,16 @@
           <div>
             <label for="number-subnets">Cantidad de Subnets</label>
             <br>
-            <input id="number-subnets" class="input-box" type="text" placeholder="20">
+            <input id="number-subnets" class="input-box" type="text" value="1" placeholder="1">
             <br>
             <label id="number-subnets-error" for="network-address"></label>
           </div>
         </div>
 
-        <p class="calculator-subtitle">Requerimientos de Subnet</p>
+        <div class="requirements-title">
+          <p class="requirements-subtitle">Requerimientos de Subnet</p>
+          <button class="add-subnet" type="button">Agregar Subnet</button>
+        </div>
 
         <div class="calculator-requirements"></div>
         <div class="calculator-error"></div>
