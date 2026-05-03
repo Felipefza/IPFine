@@ -32,7 +32,7 @@
     <section class="main">
       <div class="main-inner">
         <h1 class="main-title">
-          <span class="line-1">Calculadora</span>
+          <span class="line-1">CALCULADORA</span>
           <span class="line-2">VLSM</span>
         </h1>
         <p class="main-subtitle">
@@ -61,22 +61,35 @@
             <br>
             <label id="network-address-error" for="network-address"></label>
           </div>
-
-          <div>
-            <label for="number-subnets">Cantidad de Subnets</label>
-            <br>
-            <input id="number-subnets" class="input-box" type="text" value="1" placeholder="1">
-            <br>
-            <label id="number-subnets-error" for="network-address"></label>
-          </div>
         </div>
 
         <div class="requirements-title">
           <p class="requirements-subtitle">Requerimientos de Subnet</p>
-          <button class="add-subnet" type="button">Agregar Subnet</button>
+          <button id="add-subnet" class="add-subnet" type="button">Agregar Subnet</button>
         </div>
 
-        <div class="calculator-requirements"></div>
+        <div id="calculator-list" class="calculator-list">
+          <!--
+          <div class="calculator-requirements">
+            <div class="circle">
+              <p class="circle-index">1</p>
+            </div>
+
+            <div class="requirements-lines">
+              <div class="first-line">
+                  <input class="subnet-input" type="text" placeholder="Nombre del Subnet" value="Subnet 1">
+                <p class="requirements-text">Cantidad Hosts: </p>
+                <input class="number-hosts" type="text" placeholder="50" value="50">
+                <button class="delete-button" type="button">Borrar</button>
+              </div>
+
+              <div class="second-line">
+                <input class="description" type="text" placeholder="Descripcion (opcional)">
+              </div>
+            </div>
+          </div>
+            -->
+        </div>
         <div class="calculator-error"></div>
       </div>
     </div>

@@ -309,6 +309,7 @@ nav {
   flex-direction: column;
 
   border: 1px solid var(--card-border);
+  border-radius: 10px;
 
   max-width: var(--container-max);
   width: 100%;
@@ -337,14 +338,16 @@ nav {
 
 .input-user {
   display: grid;
+
   grid-template-columns: auto auto;
+
   width: auto;
   height: 7rem;
 }
 
 .input-box {
   height: 2.5rem;
-  width: calc(100% - 3rem);
+  width: 100%;
 
   color: var(--text-main);
   background-color: var(--dark-bg);
@@ -372,6 +375,7 @@ nav {
   display: flex;
   position: relative;
   width: 100%;
+  height: 4rem;
 }
 
 .requirements-subtitle {
@@ -379,7 +383,12 @@ nav {
   left: 0;
 
   font-size: 1.3rem;
+  font-weight: 700;
   padding-bottom: 0.5rem;
+}
+
+#network-address-error {
+  transition: 0.5s;
 }
 
 .add-subnet {
@@ -387,7 +396,7 @@ nav {
   right: 3rem;
 
   padding: 0.7rem 1.5rem;
-  width: 14rem;
+  width: 10rem;
 
   color: #fff;
 
@@ -399,7 +408,7 @@ nav {
   border-radius: 4px;
 
   font-family: 'Space Mono', monospace;
-  font-size: 1rem;
+  font-size: 0.8rem;
   font-weight: 700;
 
   cursor: pointer;
@@ -428,6 +437,114 @@ nav {
   transform: translateY(-1px);
 }
 
+.calculator-requirements {
+  display: grid;
+  grid-template-columns: min-content auto;
+
+  width: calc(100% - 3rem);
+
+  border-radius: 10px;
+
+  border: 1px solid var(--card-border);
+
+  margin-bottom: 3rem;
+}
+
+.calculator-requirements input {
+  padding-left: 1rem;
+
+  color: var(--text-main);
+  font-size: 1rem;
+  font-weight: 500;
+
+  border-style: solid;
+  border-radius: 4px;
+
+  background-color: var(--dark-bg);
+}
+
+.calculator-requirements input:focus {
+  outline-color: var(--deep-purple);
+  outline-style: solid;
+  outline-width: 2px;
+}
+
+.circle {
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+
+  max-width: 2.5rem;
+  max-height: 2.5rem;
+
+  border-radius: 20rem;
+  background-color: var(--purple);
+
+  margin: 1.3rem 1rem 0 1rem;
+  text-align: center;
+}
+
+.circle-index {
+  font-family: 'Bebas Neue', sans-serif;
+  font-weight: 1000;
+  font-size: 1.2rem;
+
+  padding-top: calc((100% - 1rem) / 4);
+}
 
 
+.first-line {
+  width: 100%;
+  height: 2rem;
+
+  display: flex;
+
+  margin-top: 1.5rem;
+}
+
+.subnet-input {
+  width: 100%;
+  height: 2rem;
+
+  margin-right: 1rem;
+}
+
+.requirements-text {
+  color: var(--text-muted);
+  max-width: 8rem;
+  min-width: 8rem;
+  margin-top: 0.2rem;
+}
+
+.number-hosts {
+  max-width: 5rem;
+  height: 2rem;
+
+  margin-right: 1rem;
+}
+
+.delete-button {
+  margin-right: 1rem;
+
+  background-color: var(--dark-bg);
+  color: var(--text-main);
+
+  border-style: solid;
+  border-radius: 4px;
+}
+
+.second-line {
+  width: 100%;
+
+  display: flex;
+
+  margin-top: 0.8rem;
+
+  padding-bottom: 1.5rem;
+}
+
+.description {
+  width: 100%;
+  height: 2rem;
+  margin-right: 1rem;
+}
 
