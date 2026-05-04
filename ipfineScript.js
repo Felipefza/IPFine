@@ -1,6 +1,5 @@
 var MapRequirements = new Map();
 var ArrayResults = [];
-var ArrayVlsm;
 
 class Results {
   constructor() {
@@ -27,6 +26,7 @@ class VlsmResults {
   }
 }
 
+var vlsm = new VlsmResults()
 
 class NetworkAddress {
   constructor() {
@@ -36,7 +36,6 @@ class NetworkAddress {
     this.octects;
 
     this.setListener();
-    this.setResults();
   }
 
   setListener() {
@@ -82,8 +81,6 @@ class NetworkAddress {
 
     this.setOctects();
 
-    var vlsm = new VlsmResults
-
     var numberHosts = 0;
     var sumHostsRequested = 0;
     var tempNet = this.network.value;
@@ -106,17 +103,17 @@ class NetworkAddress {
       ArrayResults.push(res);
 
       tempNet = this.addIP(numberHosts);
-
-      this.setInformationSubnet();
     }
 
     vlsm.totalSubnets = MapRequirements.size;
     vlsm.hostsRequested = sumHostsRequested;
     vlsm.hostsProvided = numberHosts - 2;
     vlsm.wastedHosts = numberHosts - sumHostsRequested;
-    vlsm.efficiency = 100 * vlsm.hostsRequested / vlsm.hostsProvided ;
+    vlsm.efficiency = (100 * vlsm.hostsRequested / vlsm.hostsProvided).toFixed(1) + "%";
     vlsm.remainingAddresses = Math.pow(2, 32 - parseInt(cidr.value)) - numberHosts;
     console.log(vlsm);
+
+    this.setInformationSubnet();
   }
 
   setColorInformation(information, color) {
@@ -204,18 +201,42 @@ class NetworkAddress {
   }
 
   setInformationSubnet() {
-    const title = document.getElementById("calculator-information-title");
-    title.textContent = "Resultados del calculo VLSM";
-
     const frag = document.createDocumentFragment();
+
+    const title = document.createElement("div");
+    title.className = "calculator-information-title";
+    title.textContent = "Resultados del calculo VLSM";
+    frag.appendChild(title);
 
     const resultsBox = document.createElement("div");
     resultsBox.className = "resultsBox";
     frag.appendChild(resultsBox);
 
-    var totalSubnets = MapRequirements.size;
-    var hostsRequested = 0;
+    var vlsmTitles = new Map([
+      ["Subnets Totales", vlsm.totalSubnets],
+      ["Hosts Requeridos", vlsm.hostsRequested],
+      ["Hosts Proporcionados", vlsm.hostsProvided],
+      ["Hosts Desperdiciados", vlsm.wastedHosts],
+      ["Eficiencia", vlsm.efficiency],
+      ["Direcciones Restantes", vlsm.remainingAddresses]
+    ]);
 
+    for (var [key, value] of vlsmTitles) {
+      const resultsBoxItems = document.createElement("div");
+      resultsBoxItems.className = "resultsBox-items";
+      resultsBox.appendChild(resultsBoxItems);
+
+      const resultsBoxTitle = document.createElement("div");
+      resultsBoxTitle.className = "resultsBox-items-title";
+      resultsBoxTitle.textContent = key;
+      resultsBoxItems.appendChild(resultsBoxTitle);
+
+      const resultsBoxValue = document.createElement("div");
+      resultsBoxValue.className = "resultsBox-items-value";
+      resultsBoxValue.textContent = value;
+      resultsBoxItems.appendChild(resultsBoxValue);
+    }
+    document.getElementById("calculator-information").replaceChildren(frag);
   }
 }
 
