@@ -1,6 +1,5 @@
 var MapRequirements = new Map();
 var ArrayResults = [];
-var ArrayVlsm;
 
 class Results {
   constructor() {
@@ -13,26 +12,18 @@ class Results {
     this.lastIP;
     this.masc;
     this.mascBinary;
-  }
-}
 
-class VlsmResults {
-  constructor() {
     this.totalSubnets;
     this.hostsRequested;
     this.hostsProvided;
     this.wastedHosts;
     this.efficiency;
-    this.remainingAddresses;
   }
 }
-
-
 class NetworkAddress {
   constructor() {
     this.network = document.getElementById("network-address");
     this.informationNet = document.getElementById("network-address-error");
-    this.cidr = document.getElementById("cidr");
     this.octects;
 
     this.setListener();
@@ -82,10 +73,7 @@ class NetworkAddress {
 
     this.setOctects();
 
-    var vlsm = new VlsmResults
-
     var numberHosts = 0;
-    var sumHostsRequested = 0;
     var tempNet = this.network.value;
 
     for (var [key, value] of MapRequirements) {
@@ -94,8 +82,6 @@ class NetworkAddress {
       this.calcMasc(parseInt(value.hosts.value), res)
 
       numberHosts += res.hosts;
-      sumHostsRequested += parseInt(value.hosts.value);
-
 
       res.netAddress = tempNet;
       res.broadcast = this.addIP(numberHosts - 1);
@@ -109,14 +95,6 @@ class NetworkAddress {
 
       this.setInformationSubnet();
     }
-
-    vlsm.totalSubnets = MapRequirements.size;
-    vlsm.hostsRequested = sumHostsRequested;
-    vlsm.hostsProvided = numberHosts - 2;
-    vlsm.wastedHosts = numberHosts - sumHostsRequested;
-    vlsm.efficiency = 100 * vlsm.hostsRequested / vlsm.hostsProvided ;
-    vlsm.remainingAddresses = Math.pow(2, 32 - parseInt(cidr.value)) - numberHosts;
-    console.log(vlsm);
   }
 
   setColorInformation(information, color) {
@@ -206,6 +184,7 @@ class NetworkAddress {
   setInformationSubnet() {
     const title = document.getElementById("calculator-information-title");
     title.textContent = "Resultados del calculo VLSM";
+    console.log(title.value)
 
     const frag = document.createDocumentFragment();
 
@@ -214,7 +193,7 @@ class NetworkAddress {
     frag.appendChild(resultsBox);
 
     var totalSubnets = MapRequirements.size;
-    var hostsRequested = 0;
+    var hostsRequested = 
 
   }
 }
@@ -311,6 +290,7 @@ class Requirement {
       const length = this.hosts.value.length;
       if (length > 0) {
         const isNumber = this.hosts.value[length - 1].match(/[0-9]/);
+        console.log(isNumber)
 
         if (this.hosts.value[length - 1] === " ") {
           this.hosts.value = this.hosts.value.slice(0, -1);

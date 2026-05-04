@@ -548,3 +548,30 @@ nav {
   margin-right: 1rem;
 }
 
+.calculator-information {
+  width: calc(100% - 3rem);
+  height: auto;
+
+  color: var(--text-main);
+
+  border-color: var(--cyan);
+  border-style: solid;
+  border-width: 1px;
+}
+
+#calculator-information-title {
+  padding-left: 1rem;
+}
+
+.resultsBox {
+  display: flex;
+  gap: 2rem;
+}
+
+.resultsBox-items-title {
+  color: var(--text-muted);
+}
+
+.resultsBox-items-value {
+  color: var(--text-main);
+}
