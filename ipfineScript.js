@@ -1,5 +1,6 @@
 var MapRequirements = new Map();
 var ArrayResults = [];
+var index;
 
 class Results {
   constructor() {
@@ -12,6 +13,11 @@ class Results {
     this.lastIP;
     this.masc;
     this.mascBinary;
+    this.totalSubnets;
+    this.hostsRequested;
+    this.hostsProvided;
+    this.wastedHosts;
+    this.efficiency;
   }
 }
 
@@ -42,6 +48,10 @@ class NetworkAddress {
     this.network.addEventListener("input", () => {
       this.setResults();
     })
+
+    this.cidr.addEventListener("input", () => {
+      this.setResults();
+    })
   }
 
   isValid() {
@@ -56,6 +66,7 @@ class NetworkAddress {
       if (result) {
         this.setColorInformation("Formato de Direccion de red Valido", "var(--cyan)")
         return true;
+
       } else {
         this.setColorInformation("Formato de Direccion de red Invalido", "var(--magenta)")
       }
@@ -69,8 +80,11 @@ class NetworkAddress {
 
     if (length == 0) {
       this.setColorInformation("Ingrese una Direccion de red", "var(--purple)")
+      this.setInformationError("La Direccion de red esta vacia");
+      return false;
     }
 
+    this.setInformationError("La Direccion de red es Invalida");
     return false;
   }
 
@@ -78,6 +92,8 @@ class NetworkAddress {
     if (!this.isValid()) {
       return;
     }
+
+    ArrayResults = [];
 
     this.setOctects();
 
@@ -93,27 +109,44 @@ class NetworkAddress {
       numberHosts += res.hosts;
       sumHostsRequested += parseInt(value.hosts.value);
 
-
       res.netAddress = tempNet;
       res.broadcast = this.addIP(numberHosts - 1);
       res.firsIP = this.addIP(numberHosts - res.hosts + 1);
       res.lastIP = this.addIP(numberHosts - 2);
 
-      console.log(res);
+      res.hostsRequested = value.hosts.value;
+      res.hostsProvided = res.hosts;
+      res.wastedHosts = res.hostsProvided - res.hostsRequested;
+      res.efficiency = numberWithCommas((100 * res.hostsRequested / res.hostsProvided) + "%")
+
+      if (value.name.value.length === 0) {
+        res.name = value.name.placeholder;
+      } else {
+        res.name = value.name.value;
+      }
+
+      res.description = value.description.value
+
       ArrayResults.push(res);
+      console.log(res)
 
       tempNet = this.addIP(numberHosts);
     }
 
-    vlsm.totalSubnets = MapRequirements.size;
-    vlsm.hostsRequested = sumHostsRequested;
-    vlsm.hostsProvided = numberHosts - 2;
-    vlsm.wastedHosts = numberHosts - sumHostsRequested;
-    vlsm.efficiency = (100 * vlsm.hostsRequested / vlsm.hostsProvided).toFixed(1) + "%";
-    vlsm.remainingAddresses = Math.pow(2, 32 - parseInt(cidr.value)) - numberHosts;
-    console.log(vlsm);
+    vlsm.totalSubnets = numberWithCommas(MapRequirements.size);
+    vlsm.hostsRequested = numberWithCommas(sumHostsRequested);
+    vlsm.hostsProvided = numberWithCommas(numberHosts - 2);
+    vlsm.wastedHosts = numberWithCommas(numberHosts - sumHostsRequested);
+    vlsm.efficiency = numberWithCommas((100 * vlsm.hostsRequested / vlsm.hostsProvided).toFixed(1) + "%");
+    vlsm.remainingAddresses = numberWithCommas(Math.pow(2, 32 - parseInt(cidr.value)) - numberHosts);
+
+    if (vlsm.remainingAddresses < 0) {
+      this.setInformationError("Insuficiente espacio para todos los requerimientos")
+      return;
+    }
 
     this.setInformationSubnet();
+    this.setCalculatorResults();
   }
 
   setColorInformation(information, color) {
@@ -195,9 +228,25 @@ class NetworkAddress {
     return ipSumed;
   }
 
-  setInformationError() {
-    const title = document.getElementById("calculator-information-title");
-    title.textContent = "tituel";
+  setInformationError(message) {
+    document.getElementById("calculator-results").replaceChildren();
+
+    const frag = document.createDocumentFragment();
+
+    const title = document.createElement("div");
+    title.className = "calculator-information-title"
+    title.textContent = "Error De Calculo";
+    frag.appendChild(title);
+
+    const messageText = document.createElement("div")
+    messageText.className = "resultsBox-message";
+    messageText.textContent = message;
+    frag.appendChild(messageText)
+
+    var calculatorInformation = document.getElementById("calculator-information");
+    calculatorInformation.style.borderColor = "var(--magenta)"
+    calculatorInformation.style.backgroundColor = "var(--dark-magenta)"
+    calculatorInformation.replaceChildren(frag);
   }
 
   setInformationSubnet() {
@@ -236,15 +285,131 @@ class NetworkAddress {
       resultsBoxValue.textContent = value;
       resultsBoxItems.appendChild(resultsBoxValue);
     }
-    document.getElementById("calculator-information").replaceChildren(frag);
+    const calculatorInformation = document.getElementById("calculator-information");
+    calculatorInformation.style.borderColor = "var(--cyan)"
+    calculatorInformation.style.backgroundColor = "var(--dark-cyan)"
+    calculatorInformation.replaceChildren(frag);
+  }
+
+  setCalculatorResults() {
+    const arrayTitles = [
+      "Subnets",
+      "Redes",
+      "Hosts",
+      "Masc",
+      "Eficiencia",
+    ];
+
+    const frag = document.createDocumentFragment();
+
+    const title = document.createElement("div");
+    title.className = "calculator-results-title";
+    title.textContent = "Subnets Calculados";
+    frag.appendChild(title);
+
+    const container = document.createElement("div");
+    container.className = "calculator-results-container";
+    frag.appendChild(container);
+
+    const topContainer = document.createElement("div");
+    topContainer.className = "calculator-results-topContainer";
+    container.appendChild(topContainer);
+
+    for (var singleTitle of arrayTitles) {
+      const item = document.createElement("div");
+      item.className = "calculator-results-topContainer-items";
+      item.textContent = singleTitle;
+      topContainer.appendChild(item);
+    }
+
+
+    for (var item of ArrayResults) {
+      const bottomContainer = document.createElement("div");
+      bottomContainer.className = "calculator-results-bottomContainer";
+      container.appendChild(bottomContainer);
+
+      const subnetContainer = document.createElement("div");
+      bottomContainer.appendChild(subnetContainer);
+
+      const networkContainer= document.createElement("div");
+      bottomContainer.appendChild(networkContainer);
+
+      const hostsContainer = document.createElement("div");
+      bottomContainer.appendChild(hostsContainer);
+
+      const mascContainer= document.createElement("div");
+      bottomContainer.appendChild(mascContainer);
+
+      const efficiencyContainer = document.createElement("div");
+      bottomContainer.appendChild(efficiencyContainer);
+
+      const nameSubnet = document.createElement("div");
+      nameSubnet.className = "calculator-results-name";
+      nameSubnet.textContent = item.name;
+      subnetContainer.appendChild(nameSubnet);
+
+      const description = document.createElement("div");
+      description.className = "calculator-results-description";
+      description.textContent += item.description;
+      subnetContainer.appendChild(description);
+
+      const network = document.createElement("div");
+      network.className = "calculator-results-network";
+      network.textContent += item.netAddress + "/" + item.masc;
+      networkContainer.appendChild(network);
+
+      const firstIP = document.createElement("div");
+      firstIP.className = "calculator-results-IP";
+      firstIP.textContent += item.firsIP + " -";
+      networkContainer.appendChild(firstIP);
+
+      const lastIP = document.createElement("div");
+      lastIP.className = "calculator-results-IP";
+      lastIP.textContent += item.lastIP;
+      networkContainer.appendChild(lastIP);
+
+      const broadcast = document.createElement("div");
+      broadcast.className = "calculator-results-broadcast";
+      broadcast.textContent += item.broadcast;
+      networkContainer.appendChild(broadcast);
+
+      const hostsRequested = document.createElement("div");
+      hostsRequested.className = "calculator-results-hostsRequested";
+      hostsRequested.textContent += item.hostsRequested + " requeridos";
+      hostsContainer.appendChild(hostsRequested);
+
+      const hostsProvided = document.createElement("div");
+      hostsProvided.className = "calculator-results-hostsProvided";
+      hostsProvided.textContent += item.hostsProvided + " proporcionados";
+      hostsContainer.appendChild(hostsProvided);
+
+      const wastedHosts = document.createElement("div");
+      wastedHosts.className = "calculator-results-wastedHosts";
+      wastedHosts.textContent += item.wastedHosts + " desperdiciados";
+      hostsContainer.appendChild(wastedHosts);
+
+      const mascBinary = document.createElement("div");
+      mascBinary.className = "calculator-results-mascBinary";
+      mascBinary.textContent += item.mascBinary;
+      mascContainer.appendChild(mascBinary);
+
+      const efficiency = document.createElement("div");
+      efficiency.className = "calculator-results-efficiency";
+      efficiency.textContent += item.efficiency;
+      efficiencyContainer.appendChild(efficiency);
+    }
+
+    document.getElementById("calculator-results").replaceChildren(frag);
   }
 }
 
 class Requirement {
-  constructor(index, network) {
+  constructor(index, network, _networkAdress) {
     this.index = index;
     this.network = network;
+    this._networkAdress = _networkAdress;
     this.name;
+    this.namePlaceholder;
     this.hosts;
     this.description;
     this.isValid;
@@ -256,30 +421,37 @@ class Requirement {
 
     const calculatorRequirements = document.createElement("div");
     calculatorRequirements.className = "calculator-requirements";
+    frag.appendChild(calculatorRequirements);
 
     const circle = document.createElement("div");
     circle.className = "circle";
+    calculatorRequirements.appendChild(circle);
 
     const circleIndex = document.createElement("p");
     circleIndex.className = "circle-index";
     circleIndex.textContent = this.index;
+    circle.appendChild(circleIndex);
 
     const requirementsLines = document.createElement("div");
     requirementsLines.className = "requirements-lines";
+    calculatorRequirements.appendChild(requirementsLines);
 
     const firstLine = document.createElement("div");
     firstLine.className = "first-line";
+    requirementsLines.appendChild(firstLine);
 
     const subnetInput = document.createElement("input");
-    subnetInput.className = "subnet-input";
+    subnetInput.id = "subnet-input";
     subnetInput.type = "text";
     subnetInput.placeholder = "Subnet " + this.index;
     subnetInput.value = "Subnet " + this.index;
-    this.subnetInput = subnetInput;
+    this.name = subnetInput;
+    firstLine.appendChild(subnetInput);
 
     const requirementsText = document.createElement("p");
     requirementsText.className = "requirements-text";
     requirementsText.textContent = "Cantidad Hosts";
+    firstLine.appendChild(requirementsText);
 
     const numberHosts = document.createElement("input");
     numberHosts.className = "number-hosts";
@@ -287,37 +459,24 @@ class Requirement {
     numberHosts.placeholder = "50";
     numberHosts.value ="50";
     this.hosts = numberHosts;
+    firstLine.appendChild(numberHosts);
 
     const deleteButton = document.createElement("button");
     deleteButton.className = "delete-button";
     deleteButton.type = "button";
     deleteButton.textContent = "Borrar";
+    firstLine.appendChild(deleteButton);
 
     const secondLine = document.createElement("div");
     secondLine.className = "second-line";
+    requirementsLines.appendChild(secondLine);
 
     const description = document.createElement("input");
-    description.className = "description";
+    description.id = "description";
     description.type = "text";
     description.placeholder = "Descripcion (opcional)";
     this.description = description;
-
-    frag.appendChild(calculatorRequirements);
-
-    calculatorRequirements.appendChild(circle);
-    circle.appendChild(circleIndex);
-
-    calculatorRequirements.appendChild(requirementsLines);
-
-    requirementsLines.appendChild(firstLine);
-    firstLine.appendChild(subnetInput);
-    firstLine.appendChild(requirementsText);
-    firstLine.appendChild(numberHosts);
-    firstLine.appendChild(deleteButton);
-
-    requirementsLines.appendChild(secondLine);
     secondLine.appendChild(description);
-
 
     deleteButton.addEventListener("click", () => {
       if (MapRequirements.size == 1) {
@@ -326,7 +485,20 @@ class Requirement {
       calculatorRequirements.remove();
       MapRequirements.delete(this.index);
       this.network.setResults();
+      index -= 1;
     });
+
+    subnetInput.addEventListener("input", () => {
+      this._networkAdress.setResults();
+    })
+
+    description.addEventListener("input", () => {
+      this._networkAdress.setResults();
+    })
+
+    numberHosts.addEventListener("input", () => {
+      this._networkAdress.setResults();
+    })
 
     numberHosts.addEventListener("input", () => {
       const length = this.hosts.value.length;
@@ -352,19 +524,18 @@ class Requirement {
   }
 }
 
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 
-var index = 1;
+index = 1;
 var netAddress = new NetworkAddress()
-new Requirement(index, netAddress);
-
+new Requirement(index, netAddress, netAddress);
 
 document.getElementById("add-subnet").addEventListener("click", function() {
   index += 1
-  new Requirement(index, netAddress);
+  new Requirement(index, netAddress, netAddress);
 })
-
-
-
 
 
 

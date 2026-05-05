@@ -1,6 +1,8 @@
 :root {
   --cyan: #00f0ff;
+  --dark-cyan: #072222;
   --magenta: #ff2d6a;
+  --dark-magenta: #330B16;
   --purple: #a855f7;
   --deep-purple: #7c3aed;
   --dark-bg: #0a0a0f;
@@ -501,7 +503,7 @@ nav {
   margin-top: 1.5rem;
 }
 
-.subnet-input {
+#subnet-input {
   width: 100%;
   height: 2rem;
 
@@ -542,7 +544,7 @@ nav {
   padding-bottom: 1.5rem;
 }
 
-.description {
+#description {
   width: 100%;
   height: 2rem;
   margin-right: 1rem;
@@ -554,7 +556,6 @@ nav {
 
   color: var(--text-main);
 
-  border-color: var(--cyan);
   border-style: solid;
   border-width: 1px;
   border-radius: 4px;
@@ -570,13 +571,22 @@ nav {
 
 .resultsBox {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   column-gap: 1rem;
   row-gap: 1rem;
   align-content: center;
 
   margin-left: 3rem;
+  margin-right: 3rem;
   margin-top: 1rem;
+  margin-bottom: 1rem;
+
+  transition: all 0.5s;
+}
+
+.resultsBox-message {
+  padding-left: 1rem;
+  padding-top: 0.5rem;
   margin-bottom: 1rem;
 }
 
@@ -597,4 +607,114 @@ nav {
   text-align: center;
   font-weight: 700;
   font-size: 1.1rem;
+}
+
+.calculator-results {
+  width: calc(100% - 3rem);
+  margin-left: 3rem;
+}
+
+.calculator-results-title {
+  padding-top: 1.5rem;
+
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.calculator-results-container {
+  width: calc(100% - 3rem);
+  border-radius: 4px;
+
+  border: 1px solid var(--card-border);
+}
+
+.calculator-results-topContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(1rem, 1fr));
+  column-gap: 1rem;
+  row-gap: 1rem;
+  align-content: center;
+
+  margin: 1rem 1rem 1rem 1rem;
+}
+
+.calculator-results-bottomContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(0.1rem, 1fr));
+  column-gap: 1rem;
+  row-gap: 1rem;
+  align-content: center;
+  word-wrap:break-word;
+
+  padding: 1rem 1rem 1rem 1rem;
+}
+
+.calculator-results-topContainer-items {
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.calculator-results-bottomContainer {
+  border-radius: 4px;
+
+  border: 1px solid var(--card-border);
+}
+
+.calculator-results-name {
+  font-weight: 500;
+  color: var(--purple);
+}
+
+.calculator-results-description {
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.calculator-results-network, 
+.calculator-results-broadcast,
+.calculator-results-hostsRequested,
+.calculator-results-wastedHosts,
+.calculator-results-mascBinay {
+  font-weight: 500;
+  color: var(--text-main);
+}
+
+.calculator-results-IP {
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.calculator-results-hostsProvided,
+.calculator-results-efficiency {
+  font-weight: 500;
+  color: var(--cyan);
+}
+
+
+/* Footer */
+
+footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+footer a {
+  color: var(--text-muted);
+
+  text-decoration: none;
+
+  font-weight: 500;
+
+  transition: all 0.2s ease;
+  transform: scale(1);
+}
+
+footer a:hover {
+  color: var(--text-main);
 }
