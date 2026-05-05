@@ -40,8 +40,13 @@ class NetworkAddress {
     this.informationNet = document.getElementById("network-address-error");
     this.cidr = document.getElementById("cidr");
     this.octects;
-
+    this.cidrInformation = document.getElementById("cidr-information");
+    this.cidrInputBox = document.getElementById("cidr-input-box");
     this.setListener();
+
+    this.cidr.value = 24;
+    this.cidrInformation.textContent = "/" + this.cidr.value;
+    this.cidrInputBox.value = this.cidr.value;
   }
 
   setListener() {
@@ -50,9 +55,26 @@ class NetworkAddress {
     })
 
     this.cidr.addEventListener("input", () => {
+      this.cidrInformation.textContent = "/" + this.cidr.value;
+      this.cidrInputBox.value = this.cidr.value;
       this.setResults();
-      document.getElementById("cidr-information").textContent = this.cidr.value;
     })
+
+    this.cidrInputBox.addEventListener("input", () => {
+      var cidrLength = this.cidrInputBox.value.length
+      console.log(cidrLength)
+      if (cidrLength > 2) {
+        this.cidrInputBox.value = this.cidrInputBox.value.slice(0, cidrLength - 1)
+      }
+
+      if (this.cidrInputBox.value > 32) {
+        this.cidrInputBox.value = 32;
+      }
+      onlyNumbers(this.cidrInputBox);
+      this.cidr.value = this.cidrInputBox.value;
+      this.cidrInformation.textContent = "/" + this.cidrInputBox.value;
+      this.setResults();
+    });
   }
 
   isValid() {
@@ -62,18 +84,18 @@ class NetworkAddress {
       const ipv4 = /^(?:25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)(?:\.(?:25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)){3}$/
       const isNumber = this.network.value[length - 1].match(/[0-9.]/);
 
+      if (!isNumber) {
+        this.network.value = this.network.value.slice(0, -1);
+      }
+
       const result = ipv4.test(this.network.value);
 
       if (result) {
         this.setColorInformation("Formato de Direccion de red Valido", "var(--cyan)")
+        this.network.style.backgroundColor = "var(--dark-cyan)"
         return true;
-
       } else {
         this.setColorInformation("Formato de Direccion de red Invalido", "var(--magenta)")
-      }
-
-      if (!isNumber) {
-        this.network.value = this.network.value.slice(0, -1);
       }
     }
 
@@ -86,6 +108,7 @@ class NetworkAddress {
     }
 
     this.setInformationError("La Direccion de red es Invalida");
+    this.network.style.backgroundColor = "var(--dark-magenta)"
     return false;
   }
 
@@ -146,9 +169,11 @@ class NetworkAddress {
     vlsm.remainingAddresses = numberWithCommas(Math.pow(2, 32 - parseInt(cidr.value)) - numberHosts);
 
     if (vlsm.remainingAddresses < 0) {
-      this.setInformationError("Insuficiente espacio para todos los requerimientos")
+      this.cidr.className = "input-box cidr-magenta";
+      this.setInformationError("Insuficiente espacio para todos los requerimientos");
       return;
     }
+    this.cidr.className = "input-box cidr-cyan";
 
     this.setInformationSubnet();
     this.setCalculatorResults();
@@ -448,7 +473,6 @@ class Requirement {
     subnetInput.id = "subnet-input";
     subnetInput.type = "text";
     subnetInput.placeholder = "Subnet " + this.index;
-    subnetInput.value = "Subnet " + this.index;
     this.name = subnetInput;
     firstLine.appendChild(subnetInput);
 
@@ -458,7 +482,7 @@ class Requirement {
     firstLine.appendChild(requirementsText);
 
     const numberHosts = document.createElement("input");
-    numberHosts.className = "number-hosts";
+    numberHosts.id = "number-hosts";
     numberHosts.type = "text";
     numberHosts.placeholder = "50";
     numberHosts.value ="50";
@@ -488,8 +512,7 @@ class Requirement {
       }
       calculatorRequirements.remove();
       MapRequirements.delete(this.index);
-      this.network.setResults();
-      index -= 1;
+      this._networkAdress.setResults();
     });
 
     subnetInput.addEventListener("input", () => {
@@ -501,35 +524,39 @@ class Requirement {
     })
 
     numberHosts.addEventListener("input", () => {
+      onlyNumbers(this.hosts);
       this._networkAdress.setResults();
-    })
-
-    numberHosts.addEventListener("input", () => {
-      const length = this.hosts.value.length;
-      if (length > 0) {
-        const isNumber = this.hosts.value[length - 1].match(/[0-9]/);
-
-        if (this.hosts.value[length - 1] === " ") {
-          this.hosts.value = this.hosts.value.slice(0, -1);
-        } else if (!isNumber) {
-          this.hosts.value = this.hosts.value.slice(0, -1);
-        } else if (length === 1 && isNumber[0] === "0") {
-          this.hosts.value = 1;
-        }
-      } else {
-        this.hosts.value = 1;
-      }
-      this.network.setResults();
     });
 
     document.getElementById("calculator-list").appendChild(frag);
     MapRequirements.set(this.index, this);
-    this.network.setResults();
+    this._networkAdress.setResults();
   }
 }
 
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+function onlyNumbers(elementInput) {
+  const length = elementInput.value.length;
+
+
+  if (length > 0) {
+    for (var i = 0; i < length; i++) {
+      const isNumber = elementInput.value[i].match(/[0-9]/);
+
+      if (elementInput.value[i] === " ") {
+        elementInput.value = elementInput.value.slice(0, i) + elementInput.value.slice(i + 1);
+      } else if (!isNumber) {
+        elementInput.value = elementInput.value.slice(0, i) + elementInput.value.slice(i + 1);
+      } else if (length === 1 && isNumber[0] === "0") {
+        elementInput.value = 1;
+      }
+    }
+  } else {
+    elementInput.value = 1;
+  }
 }
 
 index = 1;
