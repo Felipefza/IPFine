@@ -322,7 +322,6 @@ class NetworkAddress {
       topContainer.appendChild(item);
     }
 
-
     for (var item of ArrayResults) {
       const bottomContainer = document.createElement("div");
       bottomContainer.className = "calculator-results-bottomContainer";

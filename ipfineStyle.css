@@ -623,9 +623,12 @@ nav {
 
 .calculator-results-container {
   width: calc(100% - 3rem);
-  border-radius: 4px;
+  border-radius: 4px 4px 0 0;
 
   border: 1px solid var(--card-border);
+
+  margin-top: 1rem;
+  margin-bottom: 3rem;
 }
 
 .calculator-results-topContainer {
@@ -655,9 +658,7 @@ nav {
 }
 
 .calculator-results-bottomContainer {
-  border-radius: 4px;
-
-  border: 1px solid var(--card-border);
+  border-top: 1px solid var(--card-border);
 }
 
 .calculator-results-name {
