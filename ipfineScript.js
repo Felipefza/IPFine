@@ -51,6 +51,7 @@ class NetworkAddress {
 
     this.cidr.addEventListener("input", () => {
       this.setResults();
+      document.getElementById("cidr-information").textContent = this.cidr.value;
     })
   }
 

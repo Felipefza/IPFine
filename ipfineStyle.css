@@ -340,11 +340,28 @@ nav {
 
 .input-user {
   display: grid;
-
-  grid-template-columns: auto auto;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  column-gap: 1rem;
 
   width: auto;
-  height: 7rem;
+  height: auto;
+}
+
+.cidr-input {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.cidr-input p {
+  width: 100%;
+}
+
+.input-center {
+  display: flex;
+  gap: 1rem;
+  align-self: center;
+  margin: 0 1rem 0 1rem;
 }
 
 .input-box {
@@ -391,6 +408,7 @@ nav {
 
 #network-address-error {
   transition: 0.5s;
+  word-wrap:break-word;
 }
 
 .add-subnet {
@@ -647,7 +665,7 @@ nav {
   column-gap: 1rem;
   row-gap: 1rem;
   align-content: center;
-  word-wrap:break-word;
+  word-wrap: break-word;
 
   padding: 1rem 1rem 1rem 1rem;
 }
