@@ -95,6 +95,11 @@ class NetworkAddress {
 
     ArrayResults = [];
 
+    MapRequirements = new Map(
+      [...MapRequirements.entries()].sort(
+      (a, b) => b[1].hosts.value - a[1].hosts.value
+    ));
+
     this.setOctects();
 
     var numberHosts = 0;
@@ -117,7 +122,7 @@ class NetworkAddress {
       res.hostsRequested = value.hosts.value;
       res.hostsProvided = res.hosts;
       res.wastedHosts = res.hostsProvided - res.hostsRequested;
-      res.efficiency = numberWithCommas((100 * res.hostsRequested / res.hostsProvided) + "%")
+      res.efficiency = (100 * res.hostsRequested / res.hostsProvided).toFixed(1) + "%"
 
       if (value.name.value.length === 0) {
         res.name = value.name.placeholder;
@@ -128,7 +133,6 @@ class NetworkAddress {
       res.description = value.description.value
 
       ArrayResults.push(res);
-      console.log(res)
 
       tempNet = this.addIP(numberHosts);
     }
@@ -137,7 +141,7 @@ class NetworkAddress {
     vlsm.hostsRequested = numberWithCommas(sumHostsRequested);
     vlsm.hostsProvided = numberWithCommas(numberHosts - 2);
     vlsm.wastedHosts = numberWithCommas(numberHosts - sumHostsRequested);
-    vlsm.efficiency = numberWithCommas((100 * vlsm.hostsRequested / vlsm.hostsProvided).toFixed(1) + "%");
+    vlsm.efficiency = (100 * vlsm.hostsRequested / vlsm.hostsProvided).toFixed(1) + "%";
     vlsm.remainingAddresses = numberWithCommas(Math.pow(2, 32 - parseInt(cidr.value)) - numberHosts);
 
     if (vlsm.remainingAddresses < 0) {
