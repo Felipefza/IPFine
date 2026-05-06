@@ -201,7 +201,7 @@ class NetworkAddress {
     do {
       maxHosts = Math.pow(2, i);
 
-      if (maxHosts > hosts) {
+      if (maxHosts >= hosts && maxHosts >= 4) { // MINIMO DE HOSTS 4, PORQUE CON MENOS, FALTAN IPS
         results.masc = 32 - i;
 
         var k = 1;
