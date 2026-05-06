@@ -168,7 +168,7 @@ class NetworkAddress {
     vlsm.efficiency = (100 * vlsm.hostsRequested / vlsm.hostsProvided).toFixed(1) + "%";
     vlsm.remainingAddresses = numberWithCommas(Math.pow(2, 32 - parseInt(cidr.value)) - numberHosts);
 
-    if (vlsm.remainingAddresses < 0) {
+    if (parseInt(vlsm.remainingAddresses) < 0) {
       this.cidr.className = "input-box cidr-magenta";
       this.setInformationError("Insuficiente espacio para todos los requerimientos");
       return;
