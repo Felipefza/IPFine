@@ -13,4 +13,4 @@
 
 https://templatemo.com/tm-617-pixel-forge
 
-[!Screenshot del template](https://github.com/Felipefza/IPFine/blob/master/assets/images/template.jpg)
+![Screenshot del template](https://github.com/Felipefza/IPFine/blob/master/assets/images/template.jpg)
