@@ -3,6 +3,7 @@
   --dark-cyan: #072222;
   --magenta: #ff2d6a;
   --dark-magenta: #330B16;
+
   --purple: #a855f7;
   --deep-purple: #7c3aed;
   --dark-bg: #0a0a0f;
@@ -379,7 +380,7 @@ nav {
 }
 
 .cidr-magenta::-webkit-slider-runnable-track {
-  background: var(--dark-magenta);
+  background: var(--output-box);
   height: 20px;
   border-radius: 8px;
   border: 1px solid var(--magenta);
@@ -475,12 +476,13 @@ nav {
   position: absolute;
   right: 3rem;
 
-  padding: 0.7rem 1.5rem;
-  width: 10rem;
+  padding: 0.5rem 1.0rem;
+  width: 12rem;
+  height: auto;
 
-  color: #fff;
+  color: var(--dark-bg);
 
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--orange);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 
@@ -488,7 +490,7 @@ nav {
   border-radius: 4px;
 
   font-family: 'Space Mono', monospace;
-  font-size: 0.8rem;
+  font-size: 1.1rem;
   font-weight: 700;
 
   cursor: pointer;
@@ -511,7 +513,7 @@ nav {
 }
 
 .add-subnet:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: #f9da89;
   border-color: rgba(255, 255, 255, 0.25);
 
   transform: translateY(-1px);
@@ -605,6 +607,7 @@ nav {
 }
 
 .delete-button {
+  width: 6rem;
   margin-right: 1rem;
 
   color: var(--text-main);
@@ -616,6 +619,10 @@ nav {
 
 .delete-button:hover {
   outline: 3px solid var(--orange);
+}
+
+.delete-button img {
+  margin-top: 0.2rem;
 }
 
 .second-line {

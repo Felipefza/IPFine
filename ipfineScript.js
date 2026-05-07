@@ -78,6 +78,7 @@ class NetworkAddress {
   }
 
   isValid() {
+    this.cidr.className = "input-box cidr-magenta";
     var length = this.network.value.length
 
     if (length > 0) {
@@ -93,6 +94,7 @@ class NetworkAddress {
       if (result) {
         this.setColorInformation("Formato de Direccion de red Valido", "var(--cyan)")
         this.network.style.backgroundColor = "var(--dark-cyan)"
+        this.cidr.className = "input-box cidr-cyan";
         return true;
       } else {
         this.setColorInformation("Formato de Direccion de red Invalido", "var(--magenta)")
@@ -163,7 +165,7 @@ class NetworkAddress {
 
     vlsm.totalSubnets = numberWithCommas(MapRequirements.size);
     vlsm.hostsRequested = numberWithCommas(sumHostsRequested);
-    vlsm.hostsProvided = numberWithCommas(numberHosts - 2);
+    vlsm.hostsProvided = numberWithCommas(numberHosts);
     vlsm.wastedHosts = numberWithCommas(numberHosts - sumHostsRequested);
     vlsm.efficiency = (100 * vlsm.hostsRequested / vlsm.hostsProvided).toFixed(1) + "%";
     vlsm.remainingAddresses = numberWithCommas(Math.pow(2, 32 - parseInt(cidr.value)) - numberHosts);
@@ -173,7 +175,6 @@ class NetworkAddress {
       this.setInformationError("Insuficiente espacio para todos los requerimientos");
       return;
     }
-    this.cidr.className = "input-box cidr-cyan";
 
     this.setInformationSubnet();
     this.setCalculatorResults();
@@ -492,8 +493,11 @@ class Requirement {
     const deleteButton = document.createElement("button");
     deleteButton.className = "delete-button";
     deleteButton.type = "button";
-    deleteButton.textContent = "Borrar";
     firstLine.appendChild(deleteButton);
+
+    const icon = document.createElement("img");
+    icon.src = "./assets/images/delete_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png";
+    deleteButton.appendChild(icon);
 
     const secondLine = document.createElement("div");
     secondLine.className = "second-line";
@@ -567,7 +571,3 @@ document.getElementById("add-subnet").addEventListener("click", function() {
   index += 1
   new Requirement(index, netAddress, netAddress);
 })
-
-
-
-
