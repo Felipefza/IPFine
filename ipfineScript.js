@@ -1,6 +1,10 @@
 var MapRequirements = new Map();
 var ArrayResults = [];
-var index;
+index = 0;
+
+var darkModeMql = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+var userMode = darkModeMql.matches === true ? "light" : "dark";
+var newMode;
 
 class Results {
   constructor() {
@@ -496,7 +500,9 @@ class Requirement {
     firstLine.appendChild(deleteButton);
 
     const icon = document.createElement("img");
-    icon.src = "./assets/images/delete_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.png";
+    icon.id = "trash_icon";
+    icon.className = "trash_icon";
+    icon.src = userMode === "light" ? "./assets/images/trash_light_ICON.png" : "./assets/images/trash_dark_ICON.png";
     deleteButton.appendChild(icon);
 
     const secondLine = document.createElement("div");
@@ -563,11 +569,49 @@ function onlyNumbers(elementInput) {
   }
 }
 
-index = 1;
-var netAddress = new NetworkAddress()
-new Requirement(index, netAddress, netAddress);
+function changeIconMode(theme) {
+  var mode = document.getElementById("change-mode");
+  mode.src = theme === "light" ? "./assets/images/moon.png" : "./assets/images/sun.png";
+
+  var oldTheme = theme === "light" ? "dark" : "light";
+
+  mode.src = theme === "light" ? "./assets/images/moon.png" : "./assets/images/sun.png";
+
+  document.documentElement.classList.replace(oldTheme, theme);
+
+  icons = document.querySelectorAll(".trash_icon");
+  icons.forEach(item=> {
+    item.src = theme === "light" ? "./assets/images/trash_light_ICON.png" : "./assets/images/trash_dark_ICON.png";
+  });
+}
+
+document.documentElement.classList.add(userMode);
+userMode = newMode;
+
+// IF THE USER CHANGE THE OS AND BROWSER THEME
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+  const newColorScheme = event.matches ? "dark" : "light";
+  changeIconMode(newColorScheme);
+});
+
+document.getElementById("change-mode-button").addEventListener("click", function(){
+  newMode = userMode === "light" ? "dark" : "light";
+  userMode = newMode;
+  changeIconMode(newMode);
+})
 
 document.getElementById("add-subnet").addEventListener("click", function() {
   index += 1
   new Requirement(index, netAddress, netAddress);
 })
+
+
+if (darkModeMql && darkModeMql.matches) {
+  changeIconMode("dark");
+} else {
+  changeIconMode("light");
+}
+
+var netAddress = new NetworkAddress()
+new Requirement(index, netAddress, netAddress);
+index++;
