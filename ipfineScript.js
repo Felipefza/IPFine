@@ -4,7 +4,7 @@ index = 0;
 
 var darkModeMql = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
 var userMode = darkModeMql.matches === true ? "light" : "dark";
-var newMode;
+var newMode = newMode === "light" ? "dark" : "light";
 
 class Results {
   constructor() {
@@ -586,7 +586,6 @@ function changeIconMode(theme) {
 }
 
 document.documentElement.classList.add(userMode);
-userMode = newMode;
 
 // IF THE USER CHANGE THE OS AND BROWSER THEME
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
@@ -595,8 +594,7 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', eve
 });
 
 document.getElementById("change-mode-button").addEventListener("click", function(){
-  newMode = userMode === "light" ? "dark" : "light";
-  userMode = newMode;
+  newMode = newMode === "light" ? "dark" : "light";
   changeIconMode(newMode);
 })
 
