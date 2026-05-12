@@ -81,28 +81,35 @@ class NetworkAddress {
     });
   }
 
+  isNumber(letter) {
+    return letter.match(/[0-9.]/);
+  }
+
+  isIpv4Valid(address) {
+    const ipv4 = /^(?:25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)(?:\.(?:25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)){3}$/;
+    return ipv4.test(address);
+  }
+
   isValid() {
     this.cidr.className = "input-box cidr-magenta";
     var length = this.network.value.length
 
     if (length > 0) {
-      const ipv4 = /^(?:25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)(?:\.(?:25[0-5]|2[0-4]\d|1\d{2}|[1-9]\d|\d)){3}$/
-      const isNumber = this.network.value[length - 1].match(/[0-9.]/);
 
-      if (!isNumber) {
+      if (!this.isNumber(this.network.value[length - 1])) {
         this.network.value = this.network.value.slice(0, -1);
       }
 
-      const result = ipv4.test(this.network.value);
 
-      if (result) {
+      if (this.isIpv4Valid(this.network.value)) {
         this.setColorInformation("Formato de Direccion de red Valido", "var(--cyan)")
         this.network.style.backgroundColor = "var(--dark-cyan)"
         this.cidr.className = "input-box cidr-cyan";
         return true;
-      } else {
-        this.setColorInformation("Formato de Direccion de red Invalido", "var(--magenta)")
+
       }
+
+      this.setColorInformation("Formato de Direccion de red Invalido", "var(--magenta)")
     }
 
     length = this.network.value.length
@@ -569,7 +576,7 @@ function onlyNumbers(elementInput) {
   }
 }
 
-function changeIconMode(theme) {
+function changeTheme(theme) {
   var mode = document.getElementById("change-mode");
   mode.src = theme === "light" ? "./assets/images/moon.png" : "./assets/images/sun.png";
 
@@ -585,17 +592,15 @@ function changeIconMode(theme) {
   });
 }
 
-document.documentElement.classList.add(userMode);
-
 // IF THE USER CHANGE THE OS AND BROWSER THEME
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
   const newColorScheme = event.matches ? "dark" : "light";
-  changeIconMode(newColorScheme);
+  changeTheme(newColorScheme);
 });
 
 document.getElementById("change-mode-button").addEventListener("click", function(){
   newMode = newMode === "light" ? "dark" : "light";
-  changeIconMode(newMode);
+  changeTheme(newMode);
 })
 
 document.getElementById("add-subnet").addEventListener("click", function() {
@@ -603,6 +608,7 @@ document.getElementById("add-subnet").addEventListener("click", function() {
   new Requirement(index, netAddress, netAddress);
 })
 
+document.documentElement.classList.add(userMode);
 
 if (darkModeMql && darkModeMql.matches) {
   changeIconMode("dark");
