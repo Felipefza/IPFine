@@ -1,11 +1,3 @@
-var MapRequirements = new Map();
-var ArrayResults = [];
-index = 0;
-
-var darkModeMql = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
-var userMode = darkModeMql.matches === true ? "light" : "dark";
-var newMode = newMode === "light" ? "dark" : "light";
-
 class Results {
   constructor() {
     this.name;
@@ -39,7 +31,7 @@ class VlsmResults {
 var vlsm = new VlsmResults()
 
 class NetworkAddress {
-  constructor() {
+  constructor(mapRequirements) {
     this.network = document.getElementById("network-address");
     this.informationNet = document.getElementById("network-address-error");
     this.cidr = document.getElementById("cidr");
@@ -47,6 +39,8 @@ class NetworkAddress {
     this.cidrInformation = document.getElementById("cidr-information");
     this.cidrInputBox = document.getElementById("cidr-input-box");
     this.setListener();
+    this.MapRequirements = mapRequirements
+    this.ArrayResults = []
 
     this.cidr.value = 24;
     this.cidrInformation.textContent = "/" + this.cidr.value;
@@ -130,10 +124,10 @@ class NetworkAddress {
       return;
     }
 
-    ArrayResults = [];
+    this.ArrayResults = [];
 
-    MapRequirements = new Map(
-      [...MapRequirements.entries()].sort(
+    this.MapRequirements = new Map(
+      [...this.MapRequirements.entries()].sort(
       (a, b) => b[1].hosts.value - a[1].hosts.value
     ));
 
@@ -143,7 +137,7 @@ class NetworkAddress {
     var sumHostsRequested = 0;
     var tempNet = this.network.value;
 
-    for (var [key, value] of MapRequirements) {
+    for (var [key, value] of this.MapRequirements) {
       var res = new Results();
 
       this.calcMasc(parseInt(value.hosts.value), res)
@@ -169,12 +163,12 @@ class NetworkAddress {
 
       res.description = value.description.value
 
-      ArrayResults.push(res);
+      this.ArrayResults.push(res);
 
       tempNet = this.addIP(numberHosts);
     }
 
-    vlsm.totalSubnets = numberWithCommas(MapRequirements.size);
+    vlsm.totalSubnets = numberWithCommas(this.MapRequirements.size);
     vlsm.hostsRequested = numberWithCommas(sumHostsRequested);
     vlsm.hostsProvided = numberWithCommas(numberHosts);
     vlsm.wastedHosts = numberWithCommas(numberHosts - sumHostsRequested);
@@ -364,7 +358,7 @@ class NetworkAddress {
       topContainer.appendChild(item);
     }
 
-    for (var item of ArrayResults) {
+    for (var item of this.ArrayResults) {
       const bottomContainer = document.createElement("div");
       bottomContainer.className = "calculator-results-bottomContainer";
       container.appendChild(bottomContainer);
@@ -445,7 +439,7 @@ class NetworkAddress {
 }
 
 class Requirement {
-  constructor(index, network, _networkAdress) {
+  constructor(index, network, _networkAdress, mapRequirements) {
     this.index = index;
     this.network = network;
     this._networkAdress = _networkAdress;
@@ -454,6 +448,7 @@ class Requirement {
     this.hosts;
     this.description;
     this.isValid;
+    this.MapRequirements = mapRequirements
     this.addRequirements();
   }
 
@@ -509,7 +504,6 @@ class Requirement {
     const icon = document.createElement("img");
     icon.id = "trash_icon";
     icon.className = "trash_icon";
-    icon.src = userMode === "light" ? "./assets/images/trash_light_ICON.png" : "./assets/images/trash_dark_ICON.png";
     deleteButton.appendChild(icon);
 
     const secondLine = document.createElement("div");
@@ -524,11 +518,11 @@ class Requirement {
     secondLine.appendChild(description);
 
     deleteButton.addEventListener("click", () => {
-      if (MapRequirements.size == 1) {
+      if (this.MapRequirements.size == 1) {
         return;
       }
       calculatorRequirements.remove();
-      MapRequirements.delete(this.index);
+      this.MapRequirements.delete(this.index);
       this._networkAdress.setResults();
     });
 
@@ -546,7 +540,7 @@ class Requirement {
     });
 
     document.getElementById("calculator-list").appendChild(frag);
-    MapRequirements.set(this.index, this);
+    this.MapRequirements.set(this.index, this);
     this._networkAdress.setResults();
   }
 }
@@ -592,30 +586,39 @@ function changeTheme(theme) {
   });
 }
 
-// IF THE USER CHANGE THE OS AND BROWSER THEME
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-  const newColorScheme = event.matches ? "dark" : "light";
-  changeTheme(newColorScheme);
-});
+window.addEventListener("DOMContentLoaded", () => {
+  let MapRequirements = new Map();
+  index = 0;
 
-document.getElementById("change-mode-button").addEventListener("click", function(){
-  newMode = newMode === "light" ? "dark" : "light";
-  changeTheme(newMode);
+  let darkModeMql = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+  let userMode = darkModeMql.matches === true ? "light" : "dark";
+  let newMode = userMode === "light" ? "dark" : "light";
+
+  // IF THE USER CHANGE THE OS AND BROWSER THEME
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+    const newColorScheme = event.matches ? "dark" : "light";
+    changeTheme(newColorScheme);
+  });
+
+  document.getElementById("change-mode-button").addEventListener("click", function(){
+    newMode = newMode === "light" ? "dark" : "light";
+    changeTheme(newMode);
+  })
+
+  document.getElementById("add-subnet").addEventListener("click", function() {
+    index += 1
+    new Requirement(index, netAddress, netAddress, MapRequirements);
+  })
+
+  document.documentElement.classList.add(userMode);
+
+  if (darkModeMql && darkModeMql.matches) {
+    changeTheme("dark");
+  } else {
+    changeTheme("light");
+  }
+
+  var netAddress = new NetworkAddress(MapRequirements)
+  new Requirement(index, netAddress, netAddress, MapRequirements);
+  index++;
 })
-
-document.getElementById("add-subnet").addEventListener("click", function() {
-  index += 1
-  new Requirement(index, netAddress, netAddress);
-})
-
-document.documentElement.classList.add(userMode);
-
-if (darkModeMql && darkModeMql.matches) {
-  changeIconMode("dark");
-} else {
-  changeIconMode("light");
-}
-
-var netAddress = new NetworkAddress()
-new Requirement(index, netAddress, netAddress);
-index++;
