@@ -3,6 +3,7 @@
   --dark-cyan: #96e2e8;
   --magenta: #e20d4a;
   --dark-magenta: #d897a9;
+  --shadow: #c2cdd1;
 
   --purple: #a855f7;
   --deep-purple: #7c3aed;
@@ -32,6 +33,7 @@
   --dark-cyan: #072222;
   --magenta: #ff2d6a;
   --dark-magenta: #330B16;
+  --shadow: black;
 
   --purple: #a855f7;
   --deep-purple: #7c3aed;
@@ -500,7 +502,7 @@ nav {
 .input-box:focus {
   outline: none;
 
-  box-shadow: 0 0 15px black;
+  box-shadow: 0 0 15px var(--shadow);
   transition: 0.5s;
 }
 

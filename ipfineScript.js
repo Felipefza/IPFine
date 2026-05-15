@@ -1,3 +1,6 @@
+let MapRequirements = new Map();
+index = 0;
+
 class Results {
   constructor() {
     this.name;
@@ -31,7 +34,7 @@ class VlsmResults {
 var vlsm = new VlsmResults()
 
 class NetworkAddress {
-  constructor(mapRequirements) {
+  constructor() {
     this.network = document.getElementById("network-address");
     this.informationNet = document.getElementById("network-address-error");
     this.cidr = document.getElementById("cidr");
@@ -39,7 +42,6 @@ class NetworkAddress {
     this.cidrInformation = document.getElementById("cidr-information");
     this.cidrInputBox = document.getElementById("cidr-input-box");
     this.setListener();
-    this.MapRequirements = mapRequirements
     this.ArrayResults = []
 
     this.cidr.value = 24;
@@ -126,8 +128,8 @@ class NetworkAddress {
 
     this.ArrayResults = [];
 
-    this.MapRequirements = new Map(
-      [...this.MapRequirements.entries()].sort(
+    MapRequirements = new Map(
+      [...MapRequirements.entries()].sort(
       (a, b) => b[1].hosts.value - a[1].hosts.value
     ));
 
@@ -137,7 +139,7 @@ class NetworkAddress {
     var sumHostsRequested = 0;
     var tempNet = this.network.value;
 
-    for (var [key, value] of this.MapRequirements) {
+    for (var [key, value] of MapRequirements) {
       var res = new Results();
 
       this.calcMasc(parseInt(value.hosts.value), res)
@@ -168,7 +170,7 @@ class NetworkAddress {
       tempNet = this.addIP(numberHosts);
     }
 
-    vlsm.totalSubnets = numberWithCommas(this.MapRequirements.size);
+    vlsm.totalSubnets = numberWithCommas(MapRequirements.size);
     vlsm.hostsRequested = numberWithCommas(sumHostsRequested);
     vlsm.hostsProvided = numberWithCommas(numberHosts);
     vlsm.wastedHosts = numberWithCommas(numberHosts - sumHostsRequested);
@@ -439,7 +441,7 @@ class NetworkAddress {
 }
 
 class Requirement {
-  constructor(index, network, _networkAdress, mapRequirements) {
+  constructor(index, network, _networkAdress) {
     this.index = index;
     this.network = network;
     this._networkAdress = _networkAdress;
@@ -448,7 +450,6 @@ class Requirement {
     this.hosts;
     this.description;
     this.isValid;
-    this.MapRequirements = mapRequirements
     this.addRequirements();
   }
 
@@ -518,11 +519,11 @@ class Requirement {
     secondLine.appendChild(description);
 
     deleteButton.addEventListener("click", () => {
-      if (this.MapRequirements.size == 1) {
+      if (MapRequirements.size == 1) {
         return;
       }
       calculatorRequirements.remove();
-      this.MapRequirements.delete(this.index);
+      MapRequirements.delete(this.index);
       this._networkAdress.setResults();
     });
 
@@ -540,7 +541,7 @@ class Requirement {
     });
 
     document.getElementById("calculator-list").appendChild(frag);
-    this.MapRequirements.set(this.index, this);
+    MapRequirements.set(this.index, this);
     this._networkAdress.setResults();
   }
 }
@@ -587,9 +588,6 @@ function changeTheme(theme) {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  let MapRequirements = new Map();
-  index = 0;
-
   let darkModeMql = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
   let userMode = darkModeMql.matches === true ? "light" : "dark";
   let newMode = userMode === "light" ? "dark" : "light";
@@ -603,14 +601,23 @@ window.addEventListener("DOMContentLoaded", () => {
   document.getElementById("change-mode-button").addEventListener("click", function(){
     newMode = newMode === "light" ? "dark" : "light";
     changeTheme(newMode);
+
   })
 
   document.getElementById("add-subnet").addEventListener("click", function() {
     index += 1
     new Requirement(index, netAddress, netAddress, MapRequirements);
+
+    icons = document.querySelectorAll(".trash_icon");
+    changeTheme(newMode);
+
   })
 
   document.documentElement.classList.add(userMode);
+
+  var netAddress = new NetworkAddress(MapRequirements)
+  new Requirement(index, netAddress, netAddress, MapRequirements);
+  index++;
 
   if (darkModeMql && darkModeMql.matches) {
     changeTheme("dark");
@@ -618,7 +625,4 @@ window.addEventListener("DOMContentLoaded", () => {
     changeTheme("light");
   }
 
-  var netAddress = new NetworkAddress(MapRequirements)
-  new Requirement(index, netAddress, netAddress, MapRequirements);
-  index++;
 })
